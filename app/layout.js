@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./light-theme.css";
 
 export const metadata = {
   title: "AURION AI — Intelligent Systems for Business",
