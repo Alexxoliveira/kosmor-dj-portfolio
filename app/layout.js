@@ -1,17 +1,20 @@
 import "./globals.css";
-import "./light-theme.css";
-import "./cinematic-theme.css";
-import "./motion-system.css";
+import "./global-v1.css";
 
 export const metadata = {
-  title: "AURION AI — Intelligent Systems for Business",
-  description:
-    "AURION AI cria agentes, automações e sistemas inteligentes para atendimento, vendas e operações.",
+  title: "AURION AI — Global Intelligent Systems for Business",
+  description: "AI agents, automation and intelligent systems for customer service, sales and operations at global scale.",
+  keywords: ["AI agents", "automation", "business AI", "customer service automation", "sales automation", "AURION AI"],
+  openGraph: {
+    title: "AURION AI — Global Intelligent Systems for Business",
+    description: "AI agents, automation and intelligent systems for global business operations.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-BR">
+    <html lang="en">
       <body>{children}</body>
     </html>
   );
