@@ -1,8 +1,9 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "KOSMOR — Psytrance / Full On",
-  description: "KOSMOR — DJ & producer. Psytrance / Full On.",
+  title: "AURION AI — Intelligent Systems for Business",
+  description:
+    "AURION AI cria agentes, automações e sistemas inteligentes para atendimento, vendas e operações.",
 };
 
 export default function RootLayout({ children }) {
