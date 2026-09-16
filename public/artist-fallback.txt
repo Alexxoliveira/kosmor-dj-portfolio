@@ -1,0 +1,1 @@
+This file intentionally left as a marker for the artist image fallback redirect. The actual image is public/artist.jpeg.
