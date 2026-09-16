@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/artist.jpeg",
+      "destination": "https://raw.githubusercontent.com/Alexxoliveira/kosmor-dj-portfolio/main/public/artist.jpeg",
+      "permanent": false
+    }
+  ]
+}
