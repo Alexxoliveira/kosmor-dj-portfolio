@@ -1,5 +1,7 @@
 import "./globals.css";
 import "./global-v1.css";
+import "./assist.css";
+import AurionAssistHost from "./components/AurionAssistHost";
 
 export const metadata = {
   title: "AURION AI — Global Intelligent Systems for Business",
@@ -15,7 +17,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <AurionAssistHost />
+      </body>
     </html>
   );
 }
