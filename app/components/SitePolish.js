@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-const sectionIds = ["solutions", "system", "cases", "trust", "contact"];
+const navTargets = ["solutions", "cases", "system", "trust", "contact"];
+const scrollTargets = ["solutions", "system", "cases", "trust", "contact"];
 
 export default function SitePolish() {
   const [progress, setProgress] = useState(0);
@@ -16,12 +17,12 @@ export default function SitePolish() {
     const menuButton = document.querySelector(".g-menu");
     const navPanel = document.querySelector(".g-nav-links");
     const navButtons = Array.from(document.querySelectorAll(".g-nav-links button"));
-    const sections = sectionIds
+    const sections = scrollTargets
       .map((id) => document.getElementById(id))
       .filter(Boolean);
 
     navButtons.forEach((button, index) => {
-      const target = sectionIds[index];
+      const target = navTargets[index];
       if (target) button.dataset.target = target;
     });
 
