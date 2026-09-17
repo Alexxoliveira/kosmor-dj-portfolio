@@ -1,6 +1,8 @@
 import "./globals.css";
 import "./global-v1.css";
+import "./polish-v2.css";
 import "./assist.css";
+import SitePolish from "./components/SitePolish";
 import AurionAssistHost from "./components/AurionAssistHost";
 
 export const metadata = {
@@ -19,6 +21,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         {children}
+        <SitePolish />
         <AurionAssistHost />
       </body>
     </html>
