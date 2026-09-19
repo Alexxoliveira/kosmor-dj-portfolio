@@ -408,6 +408,8 @@ const languages = [
   ["zh", "中文", "中文"],
 ];
 
+const contactAreaValues = ["customer_service", "sales", "operations", "integrations", "custom_project"];
+
 function Mark() {
   return <span className="g-mark" aria-hidden="true"><span /><i /><b /></span>;
 }
@@ -434,7 +436,8 @@ export default function Home() {
   const year = useMemo(() => new Date().getFullYear(), []);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("aurion-language");
+    let saved = null;
+    try { saved = window.localStorage.getItem("aurion-language"); } catch {}
     const browser = navigator.language.toLowerCase();
     const detected = browser.startsWith("pt") ? "pt" : browser.startsWith("es") ? "es" : browser.startsWith("zh") ? "zh" : "en";
     setLanguage(saved && copy[saved] ? saved : detected);
@@ -520,7 +523,7 @@ export default function Home() {
         <div className="g-heading g-reveal" data-reveal><p className="g-eyebrow">{t.architecture.eyebrow}</p><h2>{t.architecture.title}</h2><p>{t.architecture.lead}</p></div>
         <div className="g-architecture-layout">
           <div className="g-architecture-copy g-reveal" data-reveal>
-            <div className="g-tabs">{t.architecture.tabs.map((tab, index) => <button className={archTab === index ? "active" : ""} key={tab} onClick={() => setArchTab(index)}>{tab}</button>)}</div>
+            <div className="g-tabs" role="tablist" aria-label={t.architecture.eyebrow}>{t.architecture.tabs.map((tab, index) => <button type="button" role="tab" aria-selected={archTab === index} className={archTab === index ? "active" : ""} key={tab} onClick={() => setArchTab(index)}>{tab}</button>)}</div>
             <div className="g-tab-copy"><span>0{archTab + 1}</span><h3>{archContent[archTab][0]}</h3><p>{archContent[archTab][1]}</p></div>
           </div>
           <div className="g-architecture-art g-reveal" data-reveal><ArchitectureVisual labels={t.architecture.labels} active={archTab} /></div>
@@ -553,7 +556,7 @@ export default function Home() {
       <section id="contact" className="g-contact">
         <div className="g-contact-copy g-reveal" data-reveal><p className="g-eyebrow">{t.contact.eyebrow}</p><h2>{t.contact.title}</h2><p>{t.contact.lead}</p><div className="g-global-note"><span>GLOBAL DELIVERY</span><b>PT · EN · ES · 中文</b></div></div>
         <form className="g-form g-reveal" data-reveal onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}>
-          <label><span>{t.contact.company}</span><input required name="company" /></label><label><span>{t.contact.name}</span><input required name="name" /></label><label><span>{t.contact.contact}</span><input required name="contact" /></label><label><span>{t.contact.region}</span><input required name="region" /></label><label className="full"><span>{t.contact.area}</span><select required name="area" defaultValue=""><option value="" disabled>—</option>{t.contact.options.map((item) => <option value={item} key={item}>{item}</option>)}</select></label><label className="full"><span>{t.contact.message}</span><textarea required name="message" rows="4" /></label><button className="g-submit" type="submit">{t.contact.submit}<span>↗</span></button>{submitted && <p className="g-success" role="status">{t.contact.success} <small>{t.contact.note}</small></p>}
+          <label><span>{t.contact.company}</span><input required name="company" autoComplete="organization" maxLength={120} /></label><label><span>{t.contact.name}</span><input required name="name" autoComplete="name" maxLength={120} /></label><label><span>{t.contact.contact}</span><input required name="contact" autoComplete="email" autoCapitalize="none" maxLength={180} /></label><label><span>{t.contact.region}</span><input required name="region" autoComplete="country-name" maxLength={120} /></label><label className="full"><span>{t.contact.area}</span><select required name="area" defaultValue=""><option value="" disabled>—</option>{t.contact.options.map((item, index) => <option value={contactAreaValues[index]} key={contactAreaValues[index]}>{item}</option>)}</select></label><label className="full"><span>{t.contact.message}</span><textarea required name="message" rows="4" maxLength={1200} /></label><button className="g-submit" type="submit">{t.contact.submit}<span>↗</span></button>{submitted && <p className="g-success" role="status">{t.contact.success} <small>{t.contact.note}</small></p>}
         </form>
       </section>
 
