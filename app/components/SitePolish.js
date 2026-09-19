@@ -1,18 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const navTargets = ["solutions", "cases", "system", "trust", "contact"];
 const scrollTargets = ["solutions", "system", "cases", "trust", "contact"];
 
 export default function SitePolish() {
-  const [progress, setProgress] = useState(0);
+  const progressRef = useRef(null);
 
   useEffect(() => {
     const root = document.documentElement;
     root.classList.add("g-enhanced");
 
     let raf = 0;
+    let fallbackTimer = 0;
     const nav = document.querySelector(".g-nav");
     const menuButton = document.querySelector(".g-menu");
     const navPanel = document.querySelector(".g-nav-links");
@@ -30,7 +31,8 @@ export default function SitePolish() {
       raf = 0;
       const doc = document.documentElement;
       const max = Math.max(1, doc.scrollHeight - window.innerHeight);
-      setProgress(Math.min(1, Math.max(0, window.scrollY / max)));
+      const progress = Math.min(1, Math.max(0, window.scrollY / max));
+      if (progressRef.current) progressRef.current.style.transform = `scaleX(${progress})`;
 
       const marker = window.scrollY + Math.min(window.innerHeight * 0.38, 360);
       let activeId = "";
@@ -41,7 +43,7 @@ export default function SitePolish() {
       navButtons.forEach((button) => {
         const active = button.dataset.target === activeId;
         button.classList.toggle("g-active", active);
-        if (active) button.setAttribute("aria-current", "page");
+        if (active) button.setAttribute("aria-current", "location");
         else button.removeAttribute("aria-current");
       });
 
@@ -56,12 +58,14 @@ export default function SitePolish() {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
 
-    const closeMobileMenu = () => {
-      if (navPanel?.classList.contains("open")) menuButton?.click();
+    const closeMobileMenu = (returnFocus = false) => {
+      if (!navPanel?.classList.contains("open")) return;
+      menuButton?.click();
+      if (returnFocus) window.requestAnimationFrame(() => menuButton?.focus());
     };
 
     const onKeyDown = (event) => {
-      if (event.key === "Escape") closeMobileMenu();
+      if (event.key === "Escape") closeMobileMenu(true);
     };
 
     const onPointerDown = (event) => {
@@ -81,11 +85,15 @@ export default function SitePolish() {
 
     const tiltCleanups = tiltTargets.map((element) => {
       element.classList.add("g-tilt-ready");
+      let tiltRaf = 0;
+      let pointerEvent = null;
 
-      const onMove = (event) => {
+      const paintTilt = () => {
+        tiltRaf = 0;
+        if (!pointerEvent) return;
         const rect = element.getBoundingClientRect();
-        const x = (event.clientX - rect.left) / rect.width - 0.5;
-        const y = (event.clientY - rect.top) / rect.height - 0.5;
+        const x = (pointerEvent.clientX - rect.left) / rect.width - 0.5;
+        const y = (pointerEvent.clientY - rect.top) / rect.height - 0.5;
         element.style.setProperty("--tilt-x", `${(-y * 3.2).toFixed(2)}deg`);
         element.style.setProperty("--tilt-y", `${(x * 4).toFixed(2)}deg`);
         element.style.setProperty("--glow-x", `${((x + 0.5) * 100).toFixed(1)}%`);
@@ -93,7 +101,15 @@ export default function SitePolish() {
         element.classList.add("g-tilt-active");
       };
 
+      const onMove = (event) => {
+        pointerEvent = event;
+        if (!tiltRaf) tiltRaf = window.requestAnimationFrame(paintTilt);
+      };
+
       const onLeave = () => {
+        pointerEvent = null;
+        if (tiltRaf) window.cancelAnimationFrame(tiltRaf);
+        tiltRaf = 0;
         element.style.setProperty("--tilt-x", "0deg");
         element.style.setProperty("--tilt-y", "0deg");
         element.classList.remove("g-tilt-active");
@@ -105,19 +121,19 @@ export default function SitePolish() {
       return () => {
         element.removeEventListener("pointermove", onMove);
         element.removeEventListener("pointerleave", onLeave);
+        if (tiltRaf) window.cancelAnimationFrame(tiltRaf);
       };
     });
 
     if (!("IntersectionObserver" in window)) {
       document.querySelectorAll(".g-reveal").forEach((item) => item.classList.add("is-visible"));
     } else {
-      const fallbackTimer = window.setTimeout(() => {
+      fallbackTimer = window.setTimeout(() => {
         document.querySelectorAll(".g-reveal").forEach((item) => {
           const rect = item.getBoundingClientRect();
           if (rect.top < window.innerHeight * 1.1) item.classList.add("is-visible");
         });
       }, 1200);
-      root.dataset.revealFallbackTimer = String(fallbackTimer);
     }
 
     return () => {
@@ -128,15 +144,13 @@ export default function SitePolish() {
       document.removeEventListener("pointerdown", onPointerDown);
       tiltCleanups.forEach((cleanup) => cleanup());
       if (raf) window.cancelAnimationFrame(raf);
-      const timer = Number(root.dataset.revealFallbackTimer || 0);
-      if (timer) window.clearTimeout(timer);
-      delete root.dataset.revealFallbackTimer;
+      if (fallbackTimer) window.clearTimeout(fallbackTimer);
     };
   }, []);
 
   return (
     <div className="g-scroll-progress" aria-hidden="true">
-      <span style={{ transform: `scaleX(${progress})` }} />
+      <span ref={progressRef} />
     </div>
   );
 }
