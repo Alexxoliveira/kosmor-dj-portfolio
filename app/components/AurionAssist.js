@@ -130,6 +130,15 @@ export default function AurionAssist({ language = "en", context = "overview", op
     if (open) endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, loading, open]);
 
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   async function ask(text) {
     const clean = text.trim();
     if (!clean || loading) return;
@@ -139,11 +148,15 @@ export default function AurionAssist({ language = "en", context = "overview", op
     setInput("");
     setLoading(true);
 
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 32000);
+
     try {
       const response = await fetch("/api/assist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ language: lang, context, messages: next }),
+        signal: controller.signal,
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || !data.text) throw new Error("assist_request_failed");
@@ -151,6 +164,7 @@ export default function AurionAssist({ language = "en", context = "overview", op
     } catch {
       setMessages((current) => [...current, { role: "assistant", content: t.error }].slice(-14));
     } finally {
+      window.clearTimeout(timeout);
       setLoading(false);
     }
   }
@@ -168,7 +182,7 @@ export default function AurionAssist({ language = "en", context = "overview", op
   return (
     <div className={`aa-root ${open ? "is-open" : ""}`}>
       {open && (
-        <section className="aa-panel" aria-label={t.title}>
+        <section className="aa-panel" role="dialog" aria-label={t.title}>
           <header className="aa-header">
             <div className="aa-identity"><Mark /><div><strong>{t.title}</strong><span>{t.subtitle}</span></div></div>
             <div className="aa-status"><i />{t.online}</div>
@@ -177,7 +191,7 @@ export default function AurionAssist({ language = "en", context = "overview", op
 
           <div className="aa-context"><span>{contextual[0]}</span><b>AURION CORE · LIVE</b></div>
 
-          <div className="aa-messages" aria-live="polite">
+          <div className="aa-messages" aria-live="polite" aria-busy={loading}>
             {messages.map((message, index) => (
               <div className={`aa-message ${message.role === "user" ? "is-user" : "is-assistant"}`} key={`${message.role}-${index}`}>
                 {message.role === "assistant" && <span className="aa-avatar"><Mark /></span>}
@@ -207,6 +221,9 @@ export default function AurionAssist({ language = "en", context = "overview", op
               }}
               placeholder={t.placeholder}
               aria-label={t.placeholder}
+              maxLength={1000}
+              autoComplete="off"
+              enterKeyHint="send"
             />
             <button type="submit" disabled={!input.trim() || loading} aria-label={t.send}>↑</button>
           </form>
