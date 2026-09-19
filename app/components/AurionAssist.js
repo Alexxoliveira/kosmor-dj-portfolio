@@ -5,9 +5,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 const ui = {
   pt: {
     title: "AURION ASSIST",
-    subtitle: "Concierge de IA",
+    subtitle: "Consultor de IA",
     online: "ONLINE",
-    greeting: "Olá. Sou o AURION Assist. Posso explicar nossas soluções, identificar oportunidades de automação e ajudar você a definir o próximo passo.",
+    greeting: "Olá. Sou o AURION Assist. Posso analisar processos, explicar arquiteturas de IA e automação, identificar oportunidades e ajudar você a estruturar o próximo passo.",
     placeholder: "Pergunte sobre agentes, automações ou integrações...",
     send: "Enviar",
     thinking: "Analisando",
@@ -28,9 +28,9 @@ const ui = {
   },
   en: {
     title: "AURION ASSIST",
-    subtitle: "AI Concierge",
+    subtitle: "AI Business Advisor",
     online: "ONLINE",
-    greeting: "Hello. I’m AURION Assist. I can explain our solutions, identify automation opportunities and help you define the next step.",
+    greeting: "Hello. I’m AURION Assist. I can analyze workflows, explain AI and automation architectures, identify opportunities and help you structure the next step.",
     placeholder: "Ask about agents, automation or integrations...",
     send: "Send",
     thinking: "Analyzing",
@@ -51,9 +51,9 @@ const ui = {
   },
   es: {
     title: "AURION ASSIST",
-    subtitle: "Concierge de IA",
+    subtitle: "Consultor de IA",
     online: "ONLINE",
-    greeting: "Hola. Soy AURION Assist. Puedo explicar nuestras soluciones, identificar oportunidades de automatización y ayudarte a definir el siguiente paso.",
+    greeting: "Hola. Soy AURION Assist. Puedo analizar procesos, explicar arquitecturas de IA y automatización, identificar oportunidades y ayudarte a estructurar el siguiente paso.",
     placeholder: "Pregunta sobre agentes, automatización o integraciones...",
     send: "Enviar",
     thinking: "Analizando",
@@ -74,9 +74,9 @@ const ui = {
   },
   zh: {
     title: "AURION ASSIST",
-    subtitle: "AI 智能顾问",
+    subtitle: "AI 业务顾问",
     online: "在线",
-    greeting: "您好，我是 AURION Assist。我可以介绍我们的解决方案、识别自动化机会，并帮助您确定下一步。",
+    greeting: "您好，我是 AURION Assist。我可以分析业务流程、解释 AI 与自动化架构、识别机会，并帮助您规划下一步。",
     placeholder: "咨询 AI 智能体、自动化或系统集成...",
     send: "发送",
     thinking: "分析中",
