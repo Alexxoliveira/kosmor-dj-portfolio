@@ -13,3 +13,19 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 @media(max-width:1120px){.g-nav-links button:after{left:10px;right:auto;width:44px;bottom:8px;transform-origin:left}.g-nav-links button.g-active{background:linear-gradient(90deg,rgba(236,224,202,.42),transparent);border-radius:10px}.g-nav.g-scrolled{top:8px}}
 @media(max-width:720px){.g-scroll-progress{height:2px}.g-card:hover,.g-trust-card:hover,.g-process-grid article:hover,.g-case:hover,.g-btn-primary:hover,.g-btn-secondary:hover,.g-nav-cta:hover,.g-submit:hover{transform:none}.g-core-card.g-tilt-ready,.g-architecture-visual.g-tilt-ready{transform:none!important}.g-core-card.g-tilt-ready:before,.g-architecture-visual.g-tilt-ready:before{display:none}.g-input.is-active{transform:translateY(-5px) rotate(-6deg) scale(1.015)}.g-action-module.is-active{transform:translateY(-5px) rotate(6deg) scale(1.015)}}
 @media(prefers-reduced-motion:reduce){.g-scroll-progress span{transition:none!important}.g-core-card.g-tilt-ready,.g-architecture-visual.g-tilt-ready{transform:none!important}.g-card:hover,.g-trust-card:hover,.g-process-grid article:hover,.g-case:hover,.g-btn-primary:hover,.g-btn-secondary:hover,.g-nav-cta:hover,.g-submit:hover{transform:none!important}}
+
+::selection{background:rgba(190,160,100,.22);color:#171718}
+html{scroll-padding-top:108px}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.g-heading h2,.g-contact-copy h2{text-wrap:balance}
+.g-lead,.g-heading>p:last-child,.g-card p,.g-case p,.g-trust-card p,.g-process-grid p{text-wrap:pretty}
+.g-card,.g-trust-card{isolation:isolate;overflow:hidden}
+.g-card>*,.g-trust-card>*{position:relative;z-index:1}
+.g-nav-links button{min-height:36px}
+.g-form select{cursor:pointer}
+.g-form textarea{resize:vertical}
+.g-form input::placeholder,.g-form textarea::placeholder{color:#a5a9af}
+.g-success{border-radius:12px}
+html[lang="zh-CN"] .g-hero h1{line-height:.96;letter-spacing:-.045em}
+html[lang="zh-CN"] .g-heading h2,html[lang="zh-CN"] .g-contact-copy h2{line-height:1.04;letter-spacing:-.04em}
+@media(max-width:720px){html{scroll-padding-top:82px}.g-heading h2,.g-contact-copy h2{text-wrap:pretty}}
