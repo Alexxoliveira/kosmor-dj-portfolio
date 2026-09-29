@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const navTargets = ["solutions", "cases", "system", "trust", "contact"];
+const navTargets = ["solutions", "system", "cases", "trust", "contact"];
 const scrollTargets = ["solutions", "system", "cases", "trust", "contact"];
 
 export default function SitePolish() {
@@ -47,6 +47,8 @@ export default function SitePolish() {
         else button.removeAttribute("aria-current");
       });
 
+      sections.forEach((section) => section.classList.toggle("g-section-current", section.id === activeId));
+      root.style.setProperty("--g-scroll", progress.toFixed(4));
       nav?.classList.toggle("g-scrolled", window.scrollY > 24);
     };
 
@@ -98,6 +100,8 @@ export default function SitePolish() {
         element.style.setProperty("--tilt-y", `${(x * 4).toFixed(2)}deg`);
         element.style.setProperty("--glow-x", `${((x + 0.5) * 100).toFixed(1)}%`);
         element.style.setProperty("--glow-y", `${((y + 0.5) * 100).toFixed(1)}%`);
+        element.style.setProperty("--parallax-x", x.toFixed(3));
+        element.style.setProperty("--parallax-y", y.toFixed(3));
         element.classList.add("g-tilt-active");
       };
 
@@ -112,6 +116,8 @@ export default function SitePolish() {
         tiltRaf = 0;
         element.style.setProperty("--tilt-x", "0deg");
         element.style.setProperty("--tilt-y", "0deg");
+        element.style.setProperty("--parallax-x", "0");
+        element.style.setProperty("--parallax-y", "0");
         element.classList.remove("g-tilt-active");
       };
 
@@ -124,6 +130,33 @@ export default function SitePolish() {
         if (tiltRaf) window.cancelAnimationFrame(tiltRaf);
       };
     });
+
+    let heroRaf = 0;
+    const hero = document.querySelector(".g-hero");
+    let heroPointer = null;
+    const paintHero = () => {
+      heroRaf = 0;
+      if (!hero || !heroPointer) return;
+      const rect = hero.getBoundingClientRect();
+      const x = Math.max(-1, Math.min(1, ((heroPointer.clientX - rect.left) / rect.width - 0.5) * 2));
+      const y = Math.max(-1, Math.min(1, ((heroPointer.clientY - rect.top) / rect.height - 0.5) * 2));
+      root.style.setProperty("--hero-x", x.toFixed(3));
+      root.style.setProperty("--hero-y", y.toFixed(3));
+    };
+    const onHeroMove = (event) => {
+      if (!precisePointer || reducedMotion) return;
+      heroPointer = event;
+      if (!heroRaf) heroRaf = window.requestAnimationFrame(paintHero);
+    };
+    const onHeroLeave = () => {
+      heroPointer = null;
+      root.style.setProperty("--hero-x", "0");
+      root.style.setProperty("--hero-y", "0");
+      if (heroRaf) window.cancelAnimationFrame(heroRaf);
+      heroRaf = 0;
+    };
+    hero?.addEventListener("pointermove", onHeroMove);
+    hero?.addEventListener("pointerleave", onHeroLeave);
 
     if (!("IntersectionObserver" in window)) {
       document.querySelectorAll(".g-reveal").forEach((item) => item.classList.add("is-visible"));
@@ -143,6 +176,12 @@ export default function SitePolish() {
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("pointerdown", onPointerDown);
       tiltCleanups.forEach((cleanup) => cleanup());
+      hero?.removeEventListener("pointermove", onHeroMove);
+      hero?.removeEventListener("pointerleave", onHeroLeave);
+      if (heroRaf) window.cancelAnimationFrame(heroRaf);
+      root.style.removeProperty("--hero-x");
+      root.style.removeProperty("--hero-y");
+      root.style.removeProperty("--g-scroll");
       if (raf) window.cancelAnimationFrame(raf);
       if (fallbackTimer) window.clearTimeout(fallbackTimer);
     };
