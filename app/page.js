@@ -409,6 +409,7 @@ const languages = [
 ];
 
 const contactAreaValues = ["customer_service", "sales", "operations", "integrations", "custom_project"];
+const globalSignals = ["GLOBAL BY DESIGN", "PT · EN · ES · 中文", "AI AGENTS", "API-FIRST", "HUMAN-IN-THE-LOOP", "OBSERVABLE SYSTEMS"];
 
 function Mark() {
   return <span className="g-mark" aria-hidden="true"><span /><i /><b /></span>;
@@ -450,16 +451,24 @@ export default function Home() {
 
   useEffect(() => {
     const items = document.querySelectorAll("[data-reveal]");
+    if (!("IntersectionObserver" in window)) {
+      items.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("is-visible"));
-    }, { threshold: 0.12 });
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -5% 0px" });
     items.forEach((item) => observer.observe(item));
     return () => observer.disconnect();
   }, [language]);
 
   useEffect(() => {
     if (demoStage < 0 || demoStage >= t.demo.stages.length - 1) return;
-    const timer = window.setTimeout(() => setDemoStage((v) => v + 1), 850);
+    const timer = window.setTimeout(() => setDemoStage((v) => v + 1), 1050);
     return () => window.clearTimeout(timer);
   }, [demoStage, t.demo.stages.length]);
 
@@ -474,25 +483,37 @@ export default function Home() {
     [t.architecture.actionTitle, t.architecture.actionText],
   ];
 
+  const demoStatus = demoStage < 0 ? "READY" : demoStage >= t.demo.stages.length - 1 ? "COMPLETE" : "RUNNING";
+  const demoCounter = Math.max(0, demoStage + 1).toString().padStart(2, "0");
+
+  const handleArchitectureKeys = (event, index) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const last = t.architecture.tabs.length - 1;
+    const next = event.key === "Home" ? 0 : event.key === "End" ? last : event.key === "ArrowRight" ? (index + 1) % (last + 1) : (index - 1 + last + 1) % (last + 1);
+    setArchTab(next);
+    document.getElementById(`architecture-tab-${next}`)?.focus();
+  };
+
   return (
     <main className={`g-site ${language === "zh" ? "is-zh" : ""}`}>
       <div className="g-noise" aria-hidden="true" />
 
       <nav className="g-nav">
-        <button className="g-brand" onClick={() => go("top")}><Mark /><span>AURION <b>AI</b></span></button>
-        <div className={`g-nav-links ${menuOpen ? "open" : ""}`}>
-          <button onClick={() => go("solutions")}>{t.nav.solutions}</button>
-          <button onClick={() => go("cases")}>{t.nav.cases}</button>
-          <button onClick={() => go("system")}>{t.nav.system}</button>
-          <button onClick={() => go("trust")}>{t.nav.trust}</button>
-          <button onClick={() => go("contact")}>{t.nav.contact}</button>
+        <button type="button" className="g-brand" onClick={() => go("top")}><Mark /><span>AURION <b>AI</b></span></button>
+        <div id="primary-navigation" className={`g-nav-links ${menuOpen ? "open" : ""}`}>
+          <button type="button" onClick={() => go("solutions")}>{t.nav.solutions}</button>
+          <button type="button" onClick={() => go("system")}>{t.nav.system}</button>
+          <button type="button" onClick={() => go("cases")}>{t.nav.cases}</button>
+          <button type="button" onClick={() => go("trust")}>{t.nav.trust}</button>
+          <button type="button" onClick={() => go("contact")}>{t.nav.contact}</button>
         </div>
         <div className="g-nav-actions">
           <div className="g-language" role="group" aria-label="Language">
-            {languages.map(([code, short, label]) => <button key={code} title={label} aria-pressed={language === code} className={language === code ? "active" : ""} onClick={() => setLanguage(code)}>{short}</button>)}
+            {languages.map(([code, short, label]) => <button type="button" key={code} title={label} aria-label={label} aria-pressed={language === code} className={language === code ? "active" : ""} onClick={() => setLanguage(code)}>{short}</button>)}
           </div>
-          <button className="g-nav-cta" onClick={() => go("contact")}>{t.cta.contact} <span>↗</span></button>
-          <button className={`g-menu ${menuOpen ? "open" : ""}`} aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}><span /><span /></button>
+          <button type="button" className="g-nav-cta" onClick={() => go("contact")}>{t.cta.contact} <span>↗</span></button>
+          <button type="button" className={`g-menu ${menuOpen ? "open" : ""}`} aria-label="Menu" aria-controls="primary-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}><span /><span /></button>
         </div>
       </nav>
 
@@ -502,17 +523,24 @@ export default function Home() {
           <p className="g-eyebrow"><span />{t.hero.eyebrow}</p>
           <h1>{t.hero.titleA}<br /><em>{t.hero.titleB}</em><br />{t.hero.titleC}</h1>
           <p className="g-lead">{t.hero.text}</p>
-          <div className="g-hero-actions"><button className="g-btn-primary" onClick={() => go("contact")}>{t.cta.primary}<span>↗</span></button><button className="g-btn-secondary" onClick={() => go("system")}>{t.cta.secondary}</button></div>
+          <div className="g-hero-actions"><button type="button" className="g-btn-primary" onClick={() => go("contact")}>{t.cta.primary}<span>↗</span></button><button type="button" className="g-btn-secondary" onClick={() => go("system")}>{t.cta.secondary}</button></div>
           <div className="g-proof">{t.hero.proof.map((item) => <span key={item}>{item}</span>)}</div>
         </div>
         <div className="g-hero-art g-reveal" data-reveal>
           <div className="g-core-card">
-            <div className="g-core-top"><span>AURION CORE</span><b>GLOBAL / LIVE</b></div>
+            <div className="g-core-top"><span>AURION CORE</span><b>SYSTEM / MULTILINGUAL</b></div>
             <div className="g-core-stage"><div className="g-orbit o1" /><div className="g-orbit o2" /><div className="g-orbit o3" /><div className="g-sphere"><i /></div><span className="g-node n1" /><span className="g-node n2" /><span className="g-node n3" /><div className="g-chip c1">INPUT</div><div className="g-chip c2">REASON</div><div className="g-chip c3">ACT</div></div>
-            <div className="g-core-bottom"><div><span>MODE</span><b>AUTONOMOUS</b></div><div><span>CONTROL</span><b>HUMAN READY</b></div><div><span>SCALE</span><b>GLOBAL</b></div></div>
+            <div className="g-core-bottom"><div><span>MODE</span><b>ORCHESTRATED</b></div><div><span>CONTROL</span><b>HUMAN READY</b></div><div><span>SCOPE</span><b>GLOBAL BY DESIGN</b></div></div>
           </div>
         </div>
       </section>
+
+      <aside className="g-global-rail" aria-label="AURION global capabilities">
+        <span className="g-sr-only">Global by design. Portuguese, English, Spanish and Simplified Chinese. AI agents. API-first. Human-in-the-loop. Observable systems.</span>
+        <div className="g-global-track" aria-hidden="true">
+          {[...globalSignals, ...globalSignals].map((item, index) => <span key={`${item}-${index}`}><i />{item}</span>)}
+        </div>
+      </aside>
 
       <section id="solutions" className="g-section">
         <div className="g-heading g-reveal" data-reveal><p className="g-eyebrow">{t.value.eyebrow}</p><h2>{t.value.title}</h2><p>{t.value.lead}</p></div>
@@ -523,8 +551,8 @@ export default function Home() {
         <div className="g-heading g-reveal" data-reveal><p className="g-eyebrow">{t.architecture.eyebrow}</p><h2>{t.architecture.title}</h2><p>{t.architecture.lead}</p></div>
         <div className="g-architecture-layout">
           <div className="g-architecture-copy g-reveal" data-reveal>
-            <div className="g-tabs" role="tablist" aria-label={t.architecture.eyebrow}>{t.architecture.tabs.map((tab, index) => <button type="button" role="tab" aria-selected={archTab === index} className={archTab === index ? "active" : ""} key={tab} onClick={() => setArchTab(index)}>{tab}</button>)}</div>
-            <div className="g-tab-copy"><span>0{archTab + 1}</span><h3>{archContent[archTab][0]}</h3><p>{archContent[archTab][1]}</p></div>
+            <div className="g-tabs" role="tablist" aria-label={t.architecture.eyebrow}>{t.architecture.tabs.map((tab, index) => <button type="button" id={`architecture-tab-${index}`} role="tab" aria-selected={archTab === index} aria-controls="architecture-panel" tabIndex={archTab === index ? 0 : -1} className={archTab === index ? "active" : ""} key={tab} onKeyDown={(event) => handleArchitectureKeys(event, index)} onClick={() => setArchTab(index)}>{tab}</button>)}</div>
+            <div id="architecture-panel" role="tabpanel" aria-live="polite" className="g-tab-copy"><span>0{archTab + 1}</span><h3>{archContent[archTab][0]}</h3><p>{archContent[archTab][1]}</p></div>
           </div>
           <div className="g-architecture-art g-reveal" data-reveal><ArchitectureVisual labels={t.architecture.labels} active={archTab} /></div>
         </div>
@@ -538,8 +566,11 @@ export default function Home() {
       <section className="g-section g-demo">
         <div className="g-heading g-reveal" data-reveal><p className="g-eyebrow">{t.demo.eyebrow}</p><h2>{t.demo.title}</h2><p>{t.demo.lead}</p></div>
         <div className="g-demo-layout">
-          <div className="g-message-panel g-reveal" data-reveal><div className="g-message-label">{t.demo.customer}</div><div className="g-message">{t.demo.message}</div><div className="g-demo-actions"><button className="g-btn-primary" onClick={() => setDemoStage(0)}>{t.demo.run}<span>▶</span></button><button className="g-btn-secondary" onClick={() => setDemoStage(-1)}>{t.demo.reset}</button></div></div>
-          <div className="g-flow-panel g-reveal" data-reveal>{t.demo.stages.map(([title, text], index) => <div key={title} className={`g-flow-row ${demoStage >= index ? "done" : ""} ${demoStage === index ? "active" : ""}`}><span>{index + 1}</span><div><b>{title}</b><p>{text}</p></div><i /></div>)}</div>
+          <div className="g-message-panel g-reveal" data-reveal><div className="g-message-label">{t.demo.customer}</div><div className="g-message">{t.demo.message}</div><div className="g-demo-actions"><button type="button" className="g-btn-primary" onClick={() => setDemoStage(0)}>{t.demo.run}<span>▶</span></button><button type="button" className="g-btn-secondary" onClick={() => setDemoStage(-1)}>{t.demo.reset}</button></div></div>
+          <div className="g-flow-panel g-reveal" data-reveal>
+            <div className="g-workflow-head"><span>WORKFLOW TRACE</span><div><b className={`is-${demoStatus.toLowerCase()}`}>{demoStatus}</b><em>{demoCounter} / {String(t.demo.stages.length).padStart(2, "0")}</em></div></div>
+            <div aria-live="polite">{t.demo.stages.map(([title, text], index) => <div key={title} className={`g-flow-row ${demoStage >= index ? "done" : ""} ${demoStage === index ? "active" : ""}`}><span>{index + 1}</span><div><b>{title}</b><p>{text}</p></div><i /></div>)}</div>
+          </div>
         </div>
       </section>
 
@@ -554,8 +585,8 @@ export default function Home() {
       </section>
 
       <section id="contact" className="g-contact">
-        <div className="g-contact-copy g-reveal" data-reveal><p className="g-eyebrow">{t.contact.eyebrow}</p><h2>{t.contact.title}</h2><p>{t.contact.lead}</p><div className="g-global-note"><span>GLOBAL DELIVERY</span><b>PT · EN · ES · 中文</b></div></div>
-        <form className="g-form g-reveal" data-reveal onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}>
+        <div className="g-contact-copy g-reveal" data-reveal><p className="g-eyebrow">{t.contact.eyebrow}</p><h2>{t.contact.title}</h2><p>{t.contact.lead}</p><div className="g-global-note"><span>GLOBAL BY DESIGN</span><b>PT · EN · ES · 中文</b></div></div>
+        <form className="g-form g-reveal" data-reveal onChange={() => submitted && setSubmitted(false)} onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}>
           <label><span>{t.contact.company}</span><input required name="company" autoComplete="organization" maxLength={120} /></label><label><span>{t.contact.name}</span><input required name="name" autoComplete="name" maxLength={120} /></label><label><span>{t.contact.contact}</span><input required name="contact" autoComplete="email" autoCapitalize="none" maxLength={180} /></label><label><span>{t.contact.region}</span><input required name="region" autoComplete="country-name" maxLength={120} /></label><label className="full"><span>{t.contact.area}</span><select required name="area" defaultValue=""><option value="" disabled>—</option>{t.contact.options.map((item, index) => <option value={contactAreaValues[index]} key={contactAreaValues[index]}>{item}</option>)}</select></label><label className="full"><span>{t.contact.message}</span><textarea required name="message" rows="4" maxLength={1200} /></label><button className="g-submit" type="submit">{t.contact.submit}<span>↗</span></button>{submitted && <p className="g-success" role="status">{t.contact.success} <small>{t.contact.note}</small></p>}
         </form>
       </section>
