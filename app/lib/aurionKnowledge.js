@@ -66,6 +66,18 @@ const knowledge = [
     content: "AURION's site and Assist are designed around Portuguese, English, Spanish and Simplified Chinese. Good multilingual service is not only translation: terminology, tone, local expectations, date/number formats and escalation language should be validated. For regulated or contractual content, locale-specific review may be required."
   },
   {
+    id: "automation-fit",
+    title: "Automation opportunity assessment",
+    tags: ["fit","automation fit","automação","automatizar","diagnostic","diagnóstico","volume","repetition","repetição","risk","risco","approval","aprovação"],
+    content: "A strong automation candidate usually combines meaningful volume, repetitive work, reasonably clear decision rules and accessible systems. AI adds the most value where interpretation of language or variable context is necessary. High-risk, irreversible or financially sensitive actions should use stronger validation or human approval. Low-volume, highly ambiguous processes with weak system access may require process redesign before AI automation."
+  },
+  {
+    id: "production-readiness",
+    title: "From prototype to production",
+    tags: ["production","produção","prototype","protótipo","testing","teste","evaluation","avaliação","observability","observabilidade","monitoring","monitoramento"],
+    content: "Moving an AI workflow from prototype to production requires representative testing, clear failure and escalation paths, observability, permission boundaries, secure authentication, rate-limit handling, data-quality checks and measurable success criteria. Production readiness is not only model quality; it also depends on integration reliability, operational ownership and how failures are handled."
+  },
+  {
     id: "current-stage",
     title: "Current product-stage boundaries",
     tags: ["current","today","agora","hoje","ready","pronto","prototype","protótipo","production","produção"],
