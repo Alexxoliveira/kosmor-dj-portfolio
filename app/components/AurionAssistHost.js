@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import AurionAssist from "./AurionAssist";
 
 function normalizeLanguage(value) {
@@ -21,22 +20,11 @@ const sectionContext = {
   contact: "contact",
 };
 
-const bridgeCopy = {
-  pt: { nav: "AURION ASSIST", hero: "Perguntar à AURION", prompt: "Quero entender como a AURION pode ajudar minha empresa." },
-  en: { nav: "AURION ASSIST", hero: "Ask AURION", prompt: "I want to understand how AURION could help my company." },
-  es: { nav: "AURION ASSIST", hero: "Preguntar a AURION", prompt: "Quiero entender cómo AURION puede ayudar a mi empresa." },
-  zh: { nav: "AURION ASSIST", hero: "咨询 AURION", prompt: "我想了解 AURION 如何帮助我的企业。" },
-};
-
 export default function AurionAssistHost() {
   const [language, setLanguage] = useState("en");
   const [context, setContext] = useState("overview");
   const [openSignal, setOpenSignal] = useState(0);
   const [initialPrompt, setInitialPrompt] = useState("");
-  const [navTarget, setNavTarget] = useState(null);
-  const [heroTarget, setHeroTarget] = useState(null);
-
-  const labels = bridgeCopy[language] || bridgeCopy.en;
 
   useEffect(() => {
     const sync = () => setLanguage(normalizeLanguage(document.documentElement.lang || navigator.language));
@@ -47,16 +35,11 @@ export default function AurionAssistHost() {
   }, []);
 
   useEffect(() => {
-    setNavTarget(document.querySelector(".g-nav-links"));
-    setHeroTarget(document.querySelector(".g-hero-actions"));
-  }, []);
-
-  useEffect(() => {
     const sections = Object.keys(sectionContext)
       .map((id) => document.getElementById(id))
       .filter(Boolean);
 
-    if (!sections.length) return;
+    if (!sections.length || !("IntersectionObserver" in window)) return;
 
     const visibility = new Map();
     const observer = new IntersectionObserver((entries) => {
@@ -76,16 +59,12 @@ export default function AurionAssistHost() {
     return () => observer.disconnect();
   }, []);
 
-  const openAssistant = (nextContext = context, prompt = "") => {
-    setContext(nextContext || "overview");
-    setInitialPrompt(prompt);
-    setOpenSignal((value) => value + 1);
-  };
-
   useEffect(() => {
     const handleOpen = (event) => {
       const detail = event?.detail || {};
-      openAssistant(detail.context || context, typeof detail.prompt === "string" ? detail.prompt : "");
+      setContext(detail.context || context || "overview");
+      setInitialPrompt(typeof detail.prompt === "string" ? detail.prompt : "");
+      setOpenSignal((value) => value + 1);
     };
 
     window.addEventListener("aurion-assist:open", handleOpen);
@@ -97,28 +76,12 @@ export default function AurionAssistHost() {
   };
 
   return (
-    <>
-      {navTarget && createPortal(
-        <button type="button" className="aa-nav-entry" onClick={() => openAssistant(context)}>
-          <span className="aa-nav-dot" />{labels.nav}
-        </button>,
-        navTarget
-      )}
-
-      {heroTarget && createPortal(
-        <button type="button" className="aa-hero-entry" onClick={() => openAssistant("overview", labels.prompt)}>
-          <span className="aa-mini-orb" />{labels.hero}<b>↗</b>
-        </button>,
-        heroTarget
-      )}
-
-      <AurionAssist
-        language={language}
-        context={context}
-        openSignal={openSignal}
-        initialPrompt={initialPrompt}
-        onStartProject={startProject}
-      />
-    </>
+    <AurionAssist
+      language={language}
+      context={context}
+      openSignal={openSignal}
+      initialPrompt={initialPrompt}
+      onStartProject={startProject}
+    />
   );
 }
