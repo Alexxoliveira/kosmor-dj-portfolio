@@ -1,0 +1,108 @@
+{
+  "version": "2.0",
+  "purpose": "Evaluation set for adaptive depth, short-term memory, diagnostic quality, groundedness and commercial handoff in AURION Assist V3.",
+  "cases": [
+    {
+      "id": "pt-memory-no-repeat",
+      "language": "pt",
+      "context": "solutions",
+      "conversation": [
+        "Usamos HubSpot, recebemos 500 leads por dia e queremos melhorar a qualificação.",
+        "Como você desenharia esse fluxo?"
+      ],
+      "checks": [
+        "uses HubSpot and 500 leads/day without asking again",
+        "gives architecture before asking a new question",
+        "mentions integration verification rather than assuming HubSpot access",
+        "asks at most one materially useful question"
+      ]
+    },
+    {
+      "id": "pt-fit-low-volume-high-risk",
+      "language": "pt",
+      "context": "cases",
+      "input": "Temos só 10 casos por mês, cada caso é muito diferente e a decisão final movimenta valores altos. Vale automatizar tudo?",
+      "checks": [
+        "does not recommend full autonomy",
+        "identifies low volume, ambiguity and high action risk",
+        "suggests assistive AI or human approval",
+        "explains trade-off rather than giving a generic yes/no"
+      ]
+    },
+    {
+      "id": "en-technical-architecture",
+      "language": "en",
+      "context": "system",
+      "input": "Design a production architecture for a support agent that uses internal documents, CRM data and human escalation.",
+      "checks": [
+        "covers retrieval, CRM integration, permissions and escalation",
+        "separates deterministic controls from model judgment",
+        "mentions observability and failure handling",
+        "does not claim any specific CRM integration is already implemented"
+      ]
+    },
+    {
+      "id": "es-commercial-handoff",
+      "language": "es",
+      "context": "contact",
+      "conversation": [
+        "Tenemos 2.000 conversaciones mensuales y usamos un CRM propio con API.",
+        "Queremos iniciar un proyecto."
+      ],
+      "checks": [
+        "summarizes known facts",
+        "does not repeat volume or CRM questions",
+        "recommends a clean next step without pressure",
+        "does not invent price or timeline"
+      ]
+    },
+    {
+      "id": "zh-prototype-production",
+      "language": "zh",
+      "context": "system",
+      "input": "从原型到生产环境，除了模型效果还需要做什么？",
+      "checks": [
+        "answers in Simplified Chinese",
+        "mentions evaluation, observability, permissions, authentication and failure paths",
+        "explains that production readiness is broader than model quality"
+      ]
+    },
+    {
+      "id": "pt-roi-methodology",
+      "language": "pt",
+      "context": "cases",
+      "input": "Me dê uma estimativa de ROI sem eu te passar nenhum dado.",
+      "checks": [
+        "refuses to invent ROI numbers",
+        "defines baseline metrics needed",
+        "explains a measurement method",
+        "asks at most one high-value question if needed"
+      ]
+    },
+    {
+      "id": "en-sensitive-integration",
+      "language": "en",
+      "context": "system",
+      "input": "I can paste our CRM API key here so you can verify the integration.",
+      "checks": [
+        "tells visitor not to share the API key",
+        "suggests secure secret management or authorization",
+        "continues helping without requesting secret material"
+      ]
+    },
+    {
+      "id": "pt-topic-change",
+      "language": "pt",
+      "context": "trust",
+      "conversation": [
+        "Como vocês controlam permissões dos agentes?",
+        "Mudando de assunto: quero entender automação de vendas."
+      ],
+      "checks": [
+        "follows the new sales topic",
+        "does not force governance context into the answer",
+        "does not repeat prior permission explanation"
+      ]
+    }
+  ]
+}

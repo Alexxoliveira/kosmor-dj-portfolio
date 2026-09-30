@@ -1,6 +1,6 @@
-# KOSMOR — DJ Portfolio
+# AURION AI
 
-Portfólio Next.js para o projeto KOSMOR, focado em Psytrance / Full On.
+Protótipo institucional da AURION AI construído em Next.js 15 / React 19.
 
 ## Desenvolvimento
 
@@ -16,4 +16,4 @@ npm run build
 npm start
 ```
 
-Projeto preparado para deploy na Vercel.
+A interface é responsiva, sem assets externos obrigatórios e preparada para deploy no Vercel.

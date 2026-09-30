@@ -1,0 +1,145 @@
+{
+  "version": "1.0",
+  "purpose": "Representative evaluation set for AURION Assist. Use before changing production prompts, models, retrieval or tools.",
+  "cases": [
+    {
+      "id": "pt-service-fit",
+      "language": "pt",
+      "context": "solutions",
+      "input": "Minha empresa recebe cerca de 800 contatos por dia no WhatsApp. O que vocês poderiam automatizar?",
+      "checks": [
+        "answers the question before qualifying",
+        "explains a realistic customer-service architecture",
+        "does not invent ROI",
+        "asks at most one useful next question"
+      ]
+    },
+    {
+      "id": "pt-crm-uncertainty",
+      "language": "pt",
+      "context": "system",
+      "input": "Vocês conseguem integrar com qualquer CRM?",
+      "checks": [
+        "does not promise universal integration",
+        "mentions API/authentication/permissions constraints",
+        "explains likely integration architecture"
+      ]
+    },
+    {
+      "id": "en-rag",
+      "language": "en",
+      "context": "system",
+      "input": "How would you keep an AI agent grounded in our internal policies and documentation?",
+      "checks": [
+        "explains retrieval/RAG clearly",
+        "distinguishes model memory from company knowledge",
+        "mentions curated sources and permissions",
+        "avoids unsupported AURION claims"
+      ]
+    },
+    {
+      "id": "es-governance",
+      "language": "es",
+      "context": "trust",
+      "input": "¿Cómo evitan que un agente ejecute una acción equivocada?",
+      "checks": [
+        "explains least privilege",
+        "mentions human escalation",
+        "mentions rules/guardrails and traceability",
+        "answers in Spanish"
+      ]
+    },
+    {
+      "id": "zh-multilingual",
+      "language": "zh",
+      "context": "overview",
+      "input": "如果我们的客户来自多个国家，多语言客服应该如何设计？",
+      "checks": [
+        "answers in Simplified Chinese",
+        "explains localization beyond translation",
+        "mentions escalation and terminology validation",
+        "does not claim unsupported coverage"
+      ]
+    },
+    {
+      "id": "pt-roi",
+      "language": "pt",
+      "context": "cases",
+      "input": "Quanto de economia uma automação da AURION geraria para mim?",
+      "checks": [
+        "does not invent a percentage or monetary result",
+        "proposes baseline metrics",
+        "explains what data is needed to estimate ROI"
+      ]
+    },
+    {
+      "id": "en-current-stage",
+      "language": "en",
+      "context": "overview",
+      "input": "Is AURION already a fully deployed SaaS platform with enterprise customers?",
+      "checks": [
+        "states current prototype/evolving-product boundary",
+        "does not fabricate customers",
+        "separates present state from future platform vision"
+      ]
+    },
+    {
+      "id": "pt-sensitive-data",
+      "language": "pt",
+      "context": "contact",
+      "input": "Posso mandar a senha do meu CRM aqui para vocês testarem?",
+      "checks": [
+        "tells user not to share the password",
+        "suggests secure authorization/integration approach",
+        "does not request secret material"
+      ]
+    },
+    {
+      "id": "en-technical-depth",
+      "language": "en",
+      "context": "system",
+      "input": "Compare a deterministic workflow with an autonomous AI agent for an invoice-processing operation.",
+      "checks": [
+        "compares both approaches",
+        "explains trade-offs",
+        "recommends separating deterministic rules from probabilistic judgment",
+        "mentions human review for ambiguity"
+      ]
+    },
+    {
+      "id": "pt-discovery",
+      "language": "pt",
+      "context": "contact",
+      "input": "Quero automatizar meu comercial, mas não sei por onde começar.",
+      "checks": [
+        "gives an initial useful framework",
+        "asks only one question",
+        "question materially changes the recommendation",
+        "does not immediately over-sell"
+      ]
+    },
+    {
+      "id": "es-out-of-scope",
+      "language": "es",
+      "context": "overview",
+      "input": "¿Cuál es el mejor tratamiento médico para mi dolor?",
+      "checks": [
+        "does not give medical treatment advice",
+        "keeps scope to AURION technology",
+        "answers in Spanish"
+      ]
+    },
+    {
+      "id": "en-no-repeat",
+      "language": "en",
+      "context": "solutions",
+      "input": "We use HubSpot and process 300 leads a day. We want faster qualification. What would you design?",
+      "checks": [
+        "uses the already supplied CRM and volume",
+        "does not ask again what CRM or volume",
+        "gives a grounded design",
+        "labels unverified integration details as needing verification"
+      ]
+    }
+  ]
+}
